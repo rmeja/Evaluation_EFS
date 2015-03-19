@@ -1,0 +1,7 @@
+/var/logs/*
+/var/cache/*
+!/var/logs/README.txt
+!/var/cache/README.txt
+/vendor/
+/composer.lock
+.idea
