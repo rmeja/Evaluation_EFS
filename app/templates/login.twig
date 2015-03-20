@@ -1,5 +1,10 @@
 {% extends "layout.twig" %}
 
+{% block stylesheet %}
+  {{ parent() }}
+  <link href="{{ asset('css/login.css') }}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
 
   <form class="form-signin" action="{{ path('login_check') }}" method="post">
