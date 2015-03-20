@@ -1,77 +1,68 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<nav class="navbar navbar-default">
+  <nav class="navbar navbar-default">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="#" class="navbar-brand">Evaluation EFS</a>
-        </div>
-        <div class="navbar-collapse collapse" id="navbar">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Nav header</li>
-                        <li><a href="#">Separated link</a></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
+      <div class="navbar-header">
+        <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse"
+                class="navbar-toggle collapsed" type="button">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a href="#" class="navbar-brand">Evaluation EFS</a>
+      </div>
+      <div class="navbar-collapse collapse" id="navbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li class="dropdown">
+            <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown
+              <span class="caret"></span></a>
+            <ul role="menu" class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li class="divider"></li>
+              <li class="dropdown-header">Nav header</li>
+              <li><a href="#">Separated link</a></li>
+              <li><a href="#">One more separated link</a></li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('logout') }}">Déconnexion</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-</nav>
-<div class="jumbotron">
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+    <!--/.container-fluid -->
+  </nav>
+  <div class="jumbotron">
     <h1>Welcome to Evaluation EFS</h1>
     <table class="table table-striped">
-        <thead>
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+        <th>Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for etudiant in etudiants %}
         <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
+          <th scope="row">{{ loop.index }}</th>
+          <td>{{ etudiant.lib_pr1_ind }}</td>
+          <td>{{ etudiant.lib_nom_pat_ind }}</td>
+          <td>{{ etudiant.mail_etu }}</td>
         </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
+      {% endfor %}
 
-        {% for user in users %}
-            <tr>
-                <th scope="row">123</th>
-                <td>{{ user.First_Name }}</td>
-                <td>{{ user.Last_Name }}</td>
-                <td>{{ user.Username }}</td>
-            </tr>
-        {% endfor %}
-
-        </tbody>
+      </tbody>
     </table>
-</div>
-  
+  </div>
+
 {% endblock %}

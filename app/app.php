@@ -17,7 +17,7 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new FormServiceProvider());
 $app->register(new TranslationServiceProvider());
 $app->register(new ValidatorServiceProvider());
-
+$app->register(new Silex\Provider\DoctrineServiceProvider());
 
 // Toutes les urls sont sécurisés sauf la page '/login'
 $app['security.firewalls'] = array(

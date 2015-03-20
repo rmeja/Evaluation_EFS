@@ -2,29 +2,21 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $app->get('/', function () use ($app) {
 
-  $users = array(
-      'users' => array(
-          array(
-              'First_Name' => 'Larriie',
-              'Last_Name' => 'Fincheltron',
-              'Username' => 'kabuitorinx'
-          ),
-          array(
-              'First_Name' => 'Marie',
-              'Last_Name' => 'Marcelbron',
-              'Username' => 'malutominx'
-          )
-      )
-  );
-  return $app['twig']->render('index.twig', $users);
+  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
+    'FROM individu '.
+    'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
+    'WHERE individu_etape.cod_etp = "9KFB1A" '.
+    'ORDER BY individu.lib_nom_pat_ind '.
+    'LIMIT 0 , 30';
+
+  $data['etudiants'] = $app['db']->fetchAll($sql);
+
+  return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
 
 $app->get('/login', function (Request $request) use ($app) {
