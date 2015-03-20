@@ -9,7 +9,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 //Request::setTrustedProxies(array('127.0.0.1'));
 
 $app->get('/', function () use ($app) {
-    return $app['twig']->render('index.twig', array());
+
+  $users = array(
+      'users' => array(
+          array(
+              'First_Name' => 'Larriie',
+              'Last_Name' => 'Fincheltron',
+              'Username' => 'kabuitorinx'
+          ),
+          array(
+              'First_Name' => 'Marie',
+              'Last_Name' => 'Marcelbron',
+              'Username' => 'malutominx'
+          )
+      )
+  );
+  return $app['twig']->render('index.twig', $users);
 })->bind('homepage');
 
 $app->get('/login', function (Request $request) use ($app) {
