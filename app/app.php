@@ -8,6 +8,7 @@ use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
+use Silex\Provider\DoctrineServiceProvider;
 
 $app = new Application();
 $app->register(new TwigServiceProvider());
@@ -17,7 +18,7 @@ $app->register(new UrlGeneratorServiceProvider());
 $app->register(new FormServiceProvider());
 $app->register(new TranslationServiceProvider());
 $app->register(new ValidatorServiceProvider());
-$app->register(new Silex\Provider\DoctrineServiceProvider());
+$app->register(new DoctrineServiceProvider());
 
 // Toutes les urls sont sécurisés sauf la page '/login'
 $app['security.firewalls'] = array(
