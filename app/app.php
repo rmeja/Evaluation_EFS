@@ -9,6 +9,7 @@ use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
+use App\Form\Type\EvaluationType;
 
 $app = new Application();
 $app->register(new TwigServiceProvider());
@@ -47,12 +48,18 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
   }));
 
   $twig->addFunction(new \Twig_SimpleFunction('path', function($url) use ($app) {
-      return $app['url_generator']->generate($url);
+    return $app['url_generator']->generate($url);
   }));
 
   return $twig;
 });
 
 $app['twig.form.templates'] = array('bootstrap_3_layout.html.twig');
+
+$app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
+  $types[] = new EvaluationType();
+
+  return $types;
+}));
 
 return $app;
