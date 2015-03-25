@@ -14,7 +14,8 @@ $app['db.options'] = array(
   'host' => 'localhost',
   'user' => 'evalefs',
   'password' => 'evalefs',
-  'port' => '3306'
+  'port' => '3306',
+  'charset' => 'utf8'
 );
 
 $app->register(new MonologServiceProvider(), array(
