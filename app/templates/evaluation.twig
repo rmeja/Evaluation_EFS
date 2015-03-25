@@ -15,8 +15,8 @@
       </div>
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="{{ path('logout') }}">About</a></li>
+          <li class="active"><a href="/">Annuler</a></li>
+          <li><a href="#">About</a></li>
           <li><a href="#">Contact</a></li>
           <li class="dropdown">
             <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Dropdown
@@ -41,30 +41,36 @@
     <!--/.container-fluid -->
   </nav>
   <div class="jumbotron">
-    <h1>Welcome to Evaluation EFS</h1>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>#</th>
-        <th>Code</th>
-        <th>Prénom</th>
-        <th>Nom</th>
-        <th>Email</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for etudiant in etudiants %}
-        <tr>
-          <th scope="row">{{ loop.index }}</th>
-          <td><a href="/evaluation/{{ etudiant.cod_etu }} " > {{ etudiant.cod_etu }}</a></td>
-          <td>{{ etudiant.lib_pr1_ind }}</td>
-          <td>{{ etudiant.lib_nom_pat_ind }}</td>
-          <td>{{ etudiant.mail_etu }}</td>
-        </tr>
+    <h2>Evaluation de l'étudiant fonctionnaire stagiaire </h2>
+      {% for etudiant in etu_en_cours %}
+        <p></p>
+        {{etudiant.lib_nom_pat_ind}} {{etudiant.lib_pr1_ind}}
+        <p> Parcours/Composante :</p> {{etudiant.lib_etp}}
       {% endfor %}
 
-      </tbody>
-    </table>
+  </div>
+  
+  <p></p>
+  <div Condition de travail id="condition_travail">
+    <h3>
+      <li>Condition 2 : Aboutissement du travail de réflexion sur la pratique </li>
+    </h3>
+     <p>renseignez si la condition a été remplie (si non remplie saisir le(s) motif(s)</p>
+     <input type="radio" id="condition21" name="condition[travail]" required="required" value="1" />
+     <label for="condition21" class=" required">Condition remplie</label>
+     <input type="radio" id="condition22" name="condition[travail]" required="required" value="2" />
+     <label for="condition22" class=" required">Condition non remplie</label>
+  </div>
+
+  <div Assiduité id="condition_assiduite">
+    <h3>
+      <li>Condition 3 : Assiduité participative</li>
+    </h3>
+     <p>renseignez si la condition a été remplie (si non remplie saisir le(s) motif(s)</p>
+     <input type="radio" id="condition31" name="condition[assiduite]" required="required" value="1" />
+     <label for="condition31" class=" required">Condition remplie</label>
+     <input type="radio" id="condition32" name="condition[assiduite]" required="required" value="2" />
+     <label for="condition32" class=" required">Condition non remplie</label>
   </div>
 
 {% endblock %}

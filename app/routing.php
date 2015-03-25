@@ -17,7 +17,9 @@ $app->get('/', function () use ($app) {
   $data['etudiants'] = $app['db']->fetchAll($sql);
 
   return $app['twig']->render('index.twig', $data);
+  //return $app['evaluation']->render('evaluation.twig', $data);
 })->bind('homepage');
+
 
 $app->get('/login', function (Request $request) use ($app) {
   return $app['twig']->render('login.twig', array(
@@ -25,6 +27,21 @@ $app->get('/login', function (Request $request) use ($app) {
       'last_username' => $app['session']->get('_security.last_username'),
   ));
 })->bind('login');
+
+//appel form évaluation EFS
+$app->get('/evaluation/{cod_etu}', function (Request $request, $cod_etu) use ($app) {
+
+  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+   'individu_etape.lib_etp '.
+   'FROM individu, individu_etape '.
+   'WHERE individu.cod_etu = individu_etape.cod_etu '.
+   'AND individu.cod_etu = "'.$cod_etu.'"' ;
+
+   $data['etu_en_cours'] = $app['db']->fetchAll($sql);
+   return $app['twig']->render('evaluation.twig', $data);
+
+
+})->bind('evaluation');
 
 $app->match('/form', function (Request $request) use ($app) {
     // some default data for when the form is displayed the first time
