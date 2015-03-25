@@ -40,6 +40,7 @@
     </div>
     <!--/.container-fluid -->
   </nav>
+
   <div class="jumbotron">
     <h2>Evaluation de l'étudiant fonctionnaire stagiaire </h2>
       {% for etudiant in etu_en_cours %}
@@ -49,7 +50,7 @@
       {% endfor %}
 
   </div>
-  
+
   <p></p>
   <div Condition de travail id="condition_travail">
     <h3>
@@ -72,5 +73,29 @@
      <input type="radio" id="condition32" name="condition[assiduite]" required="required" value="2" />
      <label for="condition32" class=" required">Condition non remplie</label>
   </div>
+
+  test radio bouton <br/>
+  Condition remplie <input type="radio" name="condition2" value="oui" onClick="cacher() ;" /> <br />
+  Condition non remplie <input type="radio" name="condition2" value="non" onClick="afficher() ;"/> <br />
+
+  <p id="champ_cache">
+      Motifs (si condition non remplie)<br/>
+      <input type=text name="motif_condition2"/><br/>
+  </p>
+
+
+  <script type="text/javascript">
+  document.getElementById("champ_cache").style.display = "none";
+
+  function afficher()
+  {
+      document.getElementById("champ_cache").style.display = "block";
+  }
+
+  function cacher()
+  {
+      document.getElementById("champ_cache").style.display = "none";
+  }
+  </script>
 
 {% endblock %}
