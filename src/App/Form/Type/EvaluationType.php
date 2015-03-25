@@ -16,6 +16,7 @@ class EvaluationType extends AbstractType {
         'expanded' => true,
         )
       )
+    ->add('Valider', 'submit')
     ;
   }
 
