@@ -13,22 +13,51 @@ $app->get('/', function () use ($app) {
     $user = $token->getUser();
   }
 
-  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
-    'FROM individu '.
-    'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
-    'WHERE individu_etape.cod_etp = "9KFB1A" '.
-    'ORDER BY individu.lib_nom_pat_ind '.
-    'LIMIT 0 , 30';
-
-  $data['etudiants'] = $app['db']->fetchAll($sql);
-
   if ($app['security']->isGranted('ROLE_ENSEIGNANT')) {
-    $sql = 'SELECT etapes.lib_etp '.
-      'FROM utilisateurs_etapes '.
-      'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
-      'WHERE utilisateurs_etapes.login = "'.$user->getUsername().'"';
-    $data['etapes'] = $app['db']->fetchAll($sql);
+    $sql_etape = 'SELECT etapes.lib_etp, etapes.cod_etp '.
+        'FROM utilisateurs_etapes '.
+        'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
+        'WHERE utilisateurs_etapes.login = "'.$user->getUsername().'"' .
+        'ORDER BY lib_etp';
+  } else {
+    $sql_etape = 'SELECT lib_etp, cod_etp FROM etapes ORDER BY lib_etp';
   }
+
+  $data['etapes'] = $app['db']->fetchAll($sql_etape);
+
+
+  $sql_etudiant = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
+      'FROM individu '.
+      'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu ';
+
+  $etape = $app['request']->get('etape');
+  $access = FALSE;
+
+  if (isset($etape)) {
+    foreach ($data['etapes'] as $item) {
+      if (in_array($etape, $item)) {
+        $access = TRUE;
+      }
+    }
+
+    if ($access) {
+      $sql_etudiant .= 'WHERE individu_etape.cod_etp = "'.$etape.'" ';
+    } else {
+      throw new \Exception('acces denied', 403);
+    }
+  }
+
+  $sql_etudiant .= 'ORDER BY individu.lib_nom_pat_ind ';
+
+  $data['etudiants'] = $app['db']->fetchAll($sql_etudiant);
+
+
+
+  $name = $app['request']->get('name');
+  if (isset($name)) {
+    $app['monolog']->addInfo(sprintf("le nom est : '%s'", $name));
+  }
+
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
