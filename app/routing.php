@@ -26,9 +26,13 @@ $app->get('/', function () use ($app) {
   $data['etapes'] = $app['db']->fetchAll($sql_etape);
 
 
-  $sql_etudiant = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
-      'FROM individu '.
-      'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu ';
+  $query_etudiant = $app['db']->createQueryBuilder();
+
+  $query_etudiant
+      ->select('i.cod_etu', 'lib_pr1_ind', 'lib_nom_pat_ind', 'mail_etu')
+      ->from('individu', 'i')
+      ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
+  ;
 
   $etape = $app['request']->get('etape');
   $access = FALSE;
@@ -41,17 +45,19 @@ $app->get('/', function () use ($app) {
     }
 
     if ($access) {
-      $sql_etudiant .= 'WHERE individu_etape.cod_etp = "'.$etape.'" ';
+      $query_etudiant->orWhere('i_e.cod_etp = "'.$etape.'"');
     } else {
       throw new \Exception('acces denied', 403);
     }
+  } else {
+
+    foreach ($data['etapes'] as $item) {
+      $query_etudiant->orWhere('i_e.cod_etp = "'.$item['cod_etp'].'"');
+    }
   }
 
-  $sql_etudiant .= 'ORDER BY individu.lib_nom_pat_ind ';
-
-  $data['etudiants'] = $app['db']->fetchAll($sql_etudiant);
-
-
+  $resultats = $query_etudiant->execute();
+  $data['etudiants'] = $resultats->fetchAll();
 
   $name = $app['request']->get('name');
   if (isset($name)) {
