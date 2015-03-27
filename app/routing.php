@@ -7,6 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app->get('/', function () use ($app) {
 
+  $token = $app['security']->getToken();
+
+  if (null !== $token) {
+    $user = $token->getUser();
+  }
+
   $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
     'FROM individu '.
     'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
@@ -20,7 +26,7 @@ $app->get('/', function () use ($app) {
     $sql = 'SELECT etapes.lib_etp '.
       'FROM utilisateurs_etapes '.
       'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
-      'WHERE utilisateurs_etapes.login = "john" ';
+      'WHERE utilisateurs_etapes.login = "'.$user->getUsername().'"';
     $data['etapes'] = $app['db']->fetchAll($sql);
   }
 
