@@ -59,12 +59,6 @@ $app->get('/', function () use ($app) {
   $resultats = $query_etudiant->execute();
   $data['etudiants'] = $resultats->fetchAll();
 
-  $name = $app['request']->get('name');
-  if (isset($name)) {
-    $app['monolog']->addInfo(sprintf("le nom est : '%s'", $name));
-  }
-
-
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
 
