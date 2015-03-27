@@ -33,37 +33,12 @@
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+          <li><a href="{{ path('logout') }}">D�connexion</a></li>
         </ul>
       </div>
       <!--/.nav-collapse -->
     </div>
     <!--/.container-fluid -->
   </nav>
-  <div class="jumbotron">
-    <h1>Welcome to Evaluation EFS</h1>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>#</th>
-        <th>Prénom</th>
-        <th>Nom</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for etudiant in etudiants %}
-        <tr>
-          <th scope="row">{{ loop.index }}</th>
-          <td>{{ etudiant.lib_pr1_ind }}</td>
-          <td>{{ etudiant.lib_nom_pat_ind }}</td>
-          <td><a href="/form?cod_etu={{ etudiant.cod_etu }} " > {{ etudiant.cod_etu }}</a></td>
-          <td><a  href="/form?cod_etu={{ etudiant.cod_etu }} ">éditer</a></td>
-
-        </tr>
-      {% endfor %}
-
-      </tbody>
-    </table>
-  </div>
 
 {% endblock %}

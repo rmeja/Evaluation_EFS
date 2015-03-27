@@ -28,10 +28,18 @@ $app->get('/login', function (Request $request) use ($app) {
 
 $app->match('/form', function (Request $request) use ($app) {
     // some default data for when the form is displayed the first time
-    $data = array(
-        'name' => 'Your name',
-        'email' => 'Your email',
-    );
+
+    // script appel étudiant par cod_etu
+  $cod_etu = $request->get('cod_etu');
+
+  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+  'individu_etape.lib_web_vet ' .
+  'FROM individu, individu_etape '.
+  'WHERE individu.cod_etu = individu_etape.cod_etu '.
+  'AND individu.cod_etu = "'.$cod_etu.'" ' ;
+  $data = $app['db']->fetchAssoc($sql);
+
+
 
     $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
 
