@@ -16,6 +16,14 @@ $app->get('/', function () use ($app) {
 
   $data['etudiants'] = $app['db']->fetchAll($sql);
 
+  if ($app['security']->isGranted('ROLE_ENSEIGNANT')) {
+    $sql = 'SELECT etapes.lib_etp '.
+      'FROM utilisateurs_etapes '.
+      'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
+      'WHERE utilisateurs_etapes.login = "john" ';
+    $data['etapes'] = $app['db']->fetchAll($sql);
+  }
+
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
 
@@ -25,6 +33,10 @@ $app->get('/login', function (Request $request) use ($app) {
       'last_username' => $app['session']->get('_security.last_username'),
   ));
 })->bind('login');
+
+//$app->match('/password', function (Request $request) use ($app) {
+//  return (new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder())->encodePassword('boo', '');
+//});
 
 $app->match('/form', function (Request $request) use ($app) {
     // some default data for when the form is displayed the first time
