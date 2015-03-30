@@ -75,10 +75,16 @@ $app->get('/login', function (Request $request) use ($app) {
 
 $app->match('/form', function (Request $request) use ($app) {
     // some default data for when the form is displayed the first time
-    $data = array(
-        'name' => 'Your name',
-        'email' => 'Your email',
-    );
+    // script appel étudiant par cod_etu
+   $cod_etu = $request->get('cod_etu');
+
+   $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+   'individu_etape.lib_web_vet, motif2 ' .
+   'FROM individu '.
+   'INNER JOIN individu_etape ON individu.cod_etu = individu_etape.cod_etu '.
+   'AND individu.cod_etu = "'.$cod_etu.'" '.
+   'LEFT JOIN evaluation ON individu.cod_etu = evaluation.cod_etu ';
+   $data = $app['db']->fetchAssoc($sql);
 
     $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
 
@@ -88,6 +94,10 @@ $app->match('/form', function (Request $request) use ($app) {
         $data = $form->getData();
 
         // do something with the data
+        $cod_etu_eval = $request->get('cod_etu') ;
+        $condition2 = $data['condition'] ;
+        $motif2 = $data['motif2'] ;
+        $data2 = $app ['db']->query('insert into evaluation (cod_etu, motif2) values("'.$cod_etu_eval.'", "'.$motif2.'") ');
 
         // redirect somewhere
         return $app->redirect('/');
@@ -95,6 +105,7 @@ $app->match('/form', function (Request $request) use ($app) {
 
     // display the form
     return $app['twig']->render('form.twig', array('form' => $form->createView()));
+
 });
 
 $app->error(function (\Exception $e, $code) use ($app) {

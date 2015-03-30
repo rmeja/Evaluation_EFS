@@ -9,15 +9,18 @@ class EvaluationType extends AbstractType {
 
   public function buildForm(FormBuilderInterface $builder, array $options) {
     $builder
-      ->add('name')
-      ->add('email')
-      ->add('gender', 'choice', array(
-        'choices' => array(1 => 'male', 2 => 'female'),
-        'expanded' => true,
+      ->add('lib_nom_pat_ind')
+      ->add('lib_pr1_ind')
+      ->add('radio_buttons', 'choice', array(
+                'label'        => 'Radio buttons',
+                'choices'      => array('1' => 'condition remplie', '2' => 'condition non remplie'),
         )
       )
+      ->add('motif2')
     ->add('Valider', 'submit')
     ;
+
+
   }
 
   public function getName()

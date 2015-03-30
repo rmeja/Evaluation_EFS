@@ -49,7 +49,8 @@
           <th scope="row">{{ loop.index }}</th>
           <td>{{ etudiant.lib_pr1_ind }}</td>
           <td>{{ etudiant.lib_nom_pat_ind }}</td>
-          <td>{{ etudiant.mail_etu }}</td>
+          <td><a href="/form?cod_etu={{ etudiant.cod_etu }} " > {{ etudiant.cod_etu }}</a></td>
+          <td><a  href="/form?cod_etu={{ etudiant.cod_etu }} ">éditer</a></td>
         </tr>
       {% endfor %}
 
