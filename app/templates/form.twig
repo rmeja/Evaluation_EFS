@@ -4,12 +4,18 @@
 
   {{ form_start(form, {'method': 'POST'}) }}
   {{ form_errors(form) }}
+  <div class="col-md-6">
+    {{ form_row(form.lib_nom_pat_ind, {'label': 'Nom de famille'}) }}
+    {{ form_row(form.lib_pr1_ind, {'label': 'Prénom'}) }}
+  </div>
+  <div class="col-md-6">
+    {{ form_row(form.lib_nom_usu_ind, {'label': 'Nom usuel'}) }}
+    {{ form_row(form.dat_nai_ind, {'label': 'Date de naissance'}) }}
+  </div>
+  <div class="col-md-12">
+    {{ form_row(form.lib_etp, {'label': 'Site de Formation ou Parcours'}) }}
+  </div>
 
-  {{ form_row(form.lib_nom_pat_ind, {'label': 'Nom de famille'}) }}
-  {{ form_row(form.lib_nom_usu_ind, {'label': 'Nom usuel'}) }}
-  {{ form_row(form.lib_pr1_ind, {'label': 'Prénom'}) }}
-  {{ form_row(form.dat_nai_ind, {'label': 'Date de naissance'}) }}
-  {{ form_row(form.lib_etp, {'label': 'Site de Formation ou Parcours'}) }}
 
   {{ form_row(form.condition1, {'label': 'Condition 1 : Master obtenu ou dispense de Master'}) }}
 
