@@ -25,7 +25,7 @@ class EvaluationType extends AbstractType
            'expanded' => true,
            )
          )
-         ->add('motif3', null, ['label' => 'Motifs assiduité','max_length' => '500'])
+         ->add('motif3', 'textarea', ['label' => 'Motifs assiduité', 'max_length' => '500'])
 
        ->add('Valider', 'submit')
     ;
