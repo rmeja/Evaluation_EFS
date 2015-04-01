@@ -41,6 +41,7 @@
         <th>Prénom</th>
         <th>Nom</th>
         <th>Email</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -50,6 +51,9 @@
           <td>{{ etudiant.lib_pr1_ind }}</td>
           <td>{{ etudiant.lib_nom_pat_ind }}</td>
           <td>{{ etudiant.mail_etu }}</td>
+          <td>
+            <a href="{{ url('form', {'id_etu': etudiant.cod_etu}) }}" class="glyphicon glyphicon-edit" aria-hidden="true"></a>
+          </td>
         </tr>
       {% endfor %}
 

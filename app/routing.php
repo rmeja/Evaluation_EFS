@@ -35,9 +35,9 @@ $app->get('/', function () use ($app) {
   $resultats_etapes = $query_etape->execute();
   $data['etapes'] = $resultats_etapes->fetchAll();
 
-  $query_etudiant = $app['db']->createQueryBuilder();
+  $query_etudiants = $app['db']->createQueryBuilder();
 
-  $query_etudiant
+  $query_etudiants
       ->select('i.cod_etu', 'lib_pr1_ind', 'lib_nom_pat_ind', 'mail_etu')
       ->from('individu', 'i')
       ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
@@ -54,18 +54,18 @@ $app->get('/', function () use ($app) {
     }
 
     if ($access) {
-      $query_etudiant->orWhere('i_e.cod_etp = "'.$etape.'"');
+      $query_etudiants->orWhere('i_e.cod_etp = "'.$etape.'"');
     } else {
-      throw new \Exception('acces denied', 403);
+      throw new \Exception('Vous ne pouvez pas accéder à cette partie', 403);
     }
   } else {
 
     foreach ($data['etapes'] as $item) {
-      $query_etudiant->orWhere('i_e.cod_etp = "'.$item['cod_etp'].'"');
+      $query_etudiants->orWhere('i_e.cod_etp = "'.$item['cod_etp'].'"');
     }
   }
 
-  $resultats_etudiants = $query_etudiant->execute();
+  $resultats_etudiants = $query_etudiants->execute();
   $data['etudiants'] = $resultats_etudiants->fetchAll();
 
   return $app['twig']->render('index.twig', $data);
@@ -83,28 +83,37 @@ $app->get('/login', function (Request $request) use ($app) {
 //});
 
 $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
-    // some default data for when the form is displayed the first time
-    $data = array(
-        'name' => 'Your name',
-        'email' => 'Your email',
-    );
+  // some default data for when the form is displayed the first time
 
-    $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
+  $query_etudiant = $app['db']->createQueryBuilder();
 
-    $form->handleRequest($request);
+  $query_etudiant
+    ->select('*')
+    ->from('individu', 'i')
+    ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu=e.cod_etu')
+    ->leftJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu=i.cod_etu')
+    ->where('i.cod_etu = "'.$id_etu.'"')
+  ;
 
-    if ($form->isValid()) {
-        $data = $form->getData();
+  $resultat_etudiant = $query_etudiant->execute();
+  $data = $resultat_etudiant->fetch();
 
-        // do something with the data
+  $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
 
-        // redirect somewhere
-        return $app->redirect('/');
-    }
+  $form->handleRequest($request);
 
-    // display the form
-    return $app['twig']->render('form.twig', array('form' => $form->createView()));
-});
+  if ($form->isValid()) {
+    $data = $form->getData();
+
+    // do something with the data
+
+    // redirect somewhere
+    return $app->redirect('/');
+  }
+
+  // display the form
+  return $app['twig']->render('form.twig', array('form' => $form->createView()));
+})->bind('form');;
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
