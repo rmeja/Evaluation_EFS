@@ -13,18 +13,27 @@ $app->get('/', function () use ($app) {
     $user = $token->getUser();
   }
 
+  $query_etape = $app['db']->createQueryBuilder();
+
   if ($app['security']->isGranted('ROLE_ENSEIGNANT')) {
-    $sql_etape = 'SELECT etapes.lib_etp, etapes.cod_etp '.
-        'FROM utilisateurs_etapes '.
-        'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
-        'WHERE utilisateurs_etapes.login = "'.$user->getUsername().'"' .
-        'ORDER BY lib_etp';
+    $query_etape
+        ->select('e.lib_etp', 'e.cod_etp')
+        ->from('utilisateurs_etapes', 'u_e')
+        ->innerJoin('u_e', 'etapes', 'e', 'u_e.cod_etp = e.cod_etp')
+        ->where('u_e.login = "'.$user->getUsername().'"')
+        ->orderBy('lib_etp')
+    ;
+
   } else {
-    $sql_etape = 'SELECT lib_etp, cod_etp FROM etapes ORDER BY lib_etp';
+    $query_etape
+        ->select('lib_etp', 'cod_etp')
+        ->from('etapes')
+        ->orderBy('lib_etp')
+    ;
   }
 
-  $data['etapes'] = $app['db']->fetchAll($sql_etape);
-
+  $resultats_etapes = $query_etape->execute();
+  $data['etapes'] = $resultats_etapes->fetchAll();
 
   $query_etudiant = $app['db']->createQueryBuilder();
 
@@ -56,8 +65,8 @@ $app->get('/', function () use ($app) {
     }
   }
 
-  $resultats = $query_etudiant->execute();
-  $data['etudiants'] = $resultats->fetchAll();
+  $resultats_etudiants = $query_etudiant->execute();
+  $data['etudiants'] = $resultats_etudiants->fetchAll();
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
