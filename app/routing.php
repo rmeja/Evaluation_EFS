@@ -82,7 +82,7 @@ $app->get('/login', function (Request $request) use ($app) {
 //  return (new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder())->encodePassword('boo', '');
 //});
 
-$app->match('/form', function (Request $request) use ($app) {
+$app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
     // some default data for when the form is displayed the first time
     $data = array(
         'name' => 'Your name',
