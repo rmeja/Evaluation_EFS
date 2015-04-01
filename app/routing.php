@@ -26,9 +26,11 @@ $app->get('/', function () use ($app) {
   $data['etapes'] = $app['db']->fetchAll($sql_etape);
 
 
-  $sql_etudiant = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
+  $sql_etudiant = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+      'condition2, motif2, condition3, motif3 '.
       'FROM individu '.
-      'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu ';
+      'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
+      'LEFT JOIN evaluation ON evaluation.cod_etu = individu.cod_etu ' ;
 
   $etape = $app['request']->get('etape');
   $access = FALSE;
@@ -79,7 +81,7 @@ $app->match('/form', function (Request $request) use ($app) {
    $cod_etu = $request->get('cod_etu');
 
    $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
-   'individu_etape.lib_web_vet, motif2 ' .
+   'individu_etape.lib_web_vet, condition2, motif2, condition3, motif3 ' .
    'FROM individu '.
    'INNER JOIN individu_etape ON individu.cod_etu = individu_etape.cod_etu '.
    'AND individu.cod_etu = "'.$cod_etu.'" '.
@@ -93,11 +95,32 @@ $app->match('/form', function (Request $request) use ($app) {
     if ($form->isValid()) {
         $data = $form->getData();
 
-        // do something with the data
+        // test si donnée enregistré dans evaluation
         $cod_etu_eval = $request->get('cod_etu') ;
-        $condition2 = $data['condition'] ;
+        $condition2 = $data['condition2'] ;
         $motif2 = $data['motif2'] ;
-        $data2 = $app ['db']->query('insert into evaluation (cod_etu, motif2) values("'.$cod_etu_eval.'", "'.$motif2.'") ');
+        $condition3 = $data['condition3'] ;
+        $motif3 = $data['motif3'] ;
+
+        $sieval = $app['db']->fetchAssoc('select cod_etu from evaluation where cod_etu = "'.$cod_etu_eval.'"') ;
+        if (empty($sieval)){
+
+            //
+            $sql = 'insert into evaluation '.
+            '(cod_etu, condition2, motif2, condition3, motif3) '.
+            'values("'.$cod_etu_eval.'","'.$condition2.'", "'.$motif2.'","'.$condition3.'", "'.$motif3.'") ' ;
+            // requete insert
+            $data2 = $app ['db']->query($sql) ;
+        }
+        else
+        {
+          $sql = 'update evaluation set '.
+          'condition2="'.$condition2.'", motif2="'.$motif2.'", condition3="'.$condition3.'", motif3="'.$motif3.'" '.
+          'where cod_etu = "'.$cod_etu_eval.'" ' ;
+          // requete insert
+          $data2 = $app ['db']->query($sql) ;
+        }
+
 
         // redirect somewhere
         return $app->redirect('/');
