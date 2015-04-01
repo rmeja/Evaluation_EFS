@@ -7,14 +7,59 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app->get('/', function () use ($app) {
 
-  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu '.
-    'FROM individu '.
-    'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
-    'WHERE individu_etape.cod_etp = "9KFB1A" '.
-    'ORDER BY individu.lib_nom_pat_ind '.
-    'LIMIT 0 , 30';
+  $token = $app['security']->getToken();
 
-  $data['etudiants'] = $app['db']->fetchAll($sql);
+  if (null !== $token) {
+    $user = $token->getUser();
+  }
+
+  if ($app['security']->isGranted('ROLE_ENSEIGNANT')) {
+    $sql_etape = 'SELECT etapes.lib_etp, etapes.cod_etp '.
+        'FROM utilisateurs_etapes '.
+        'INNER JOIN etapes ON utilisateurs_etapes.cod_etp = etapes.cod_etp '.
+        'WHERE utilisateurs_etapes.login = "'.$user->getUsername().'"' .
+        'ORDER BY lib_etp';
+  } else {
+    $sql_etape = 'SELECT lib_etp, cod_etp FROM etapes ORDER BY lib_etp';
+  }
+
+  $data['etapes'] = $app['db']->fetchAll($sql_etape);
+
+
+  $sql_etudiant = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+      'condition2, motif2, condition3, motif3 '.
+      'FROM individu '.
+      'INNER JOIN individu_etape ON individu_etape.cod_etu = individu.cod_etu '.
+      'LEFT JOIN evaluation ON evaluation.cod_etu = individu.cod_etu ' ;
+
+  $etape = $app['request']->get('etape');
+  $access = FALSE;
+
+  if (isset($etape)) {
+    foreach ($data['etapes'] as $item) {
+      if (in_array($etape, $item)) {
+        $access = TRUE;
+      }
+    }
+
+    if ($access) {
+      $sql_etudiant .= 'WHERE individu_etape.cod_etp = "'.$etape.'" ';
+    } else {
+      throw new \Exception('acces denied', 403);
+    }
+  }
+
+  $sql_etudiant .= 'ORDER BY individu.lib_nom_pat_ind ';
+
+  $data['etudiants'] = $app['db']->fetchAll($sql_etudiant);
+
+
+
+  $name = $app['request']->get('name');
+  if (isset($name)) {
+    $app['monolog']->addInfo(sprintf("le nom est : '%s'", $name));
+  }
+
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
@@ -26,20 +71,23 @@ $app->get('/login', function (Request $request) use ($app) {
   ));
 })->bind('login');
 
+//$app->match('/password', function (Request $request) use ($app) {
+//  return (new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder())->encodePassword('boo', '');
+//});
+
 $app->match('/form', function (Request $request) use ($app) {
     // some default data for when the form is displayed the first time
 
     // script appel étudiant par cod_etu
-  $cod_etu = $request->get('cod_etu');
+   $cod_etu = $request->get('cod_etu');
 
-  $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
-  'individu_etape.lib_web_vet ' .
-  'FROM individu, individu_etape '.
-  'WHERE individu.cod_etu = individu_etape.cod_etu '.
-  'AND individu.cod_etu = "'.$cod_etu.'" ' ;
-  $data = $app['db']->fetchAssoc($sql);
-
-
+   $sql = 'SELECT individu.cod_etu, lib_pr1_ind, lib_nom_pat_ind, mail_etu, '.
+   'individu_etape.lib_web_vet, condition2, motif2, condition3, motif3 ' .
+   'FROM individu '.
+   'INNER JOIN individu_etape ON individu.cod_etu = individu_etape.cod_etu '.
+   'AND individu.cod_etu = "'.$cod_etu.'" '.
+   'LEFT JOIN evaluation ON individu.cod_etu = evaluation.cod_etu ';
+   $data = $app['db']->fetchAssoc($sql);
 
     $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
 
@@ -48,7 +96,32 @@ $app->match('/form', function (Request $request) use ($app) {
     if ($form->isValid()) {
         $data = $form->getData();
 
-        // do something with the data
+        // test si donnée enregistré dans evaluation
+        $cod_etu_eval = $request->get('cod_etu') ;
+        $condition2 = $data['condition2'] ;
+        $motif2 = $data['motif2'] ;
+        $condition3 = $data['condition3'] ;
+        $motif3 = $data['motif3'] ;
+
+        $sieval = $app['db']->fetchAssoc('select cod_etu from evaluation where cod_etu = "'.$cod_etu_eval.'"') ;
+        if (empty($sieval)){
+
+            //
+            $sql = 'insert into evaluation '.
+            '(cod_etu, condition2, motif2, condition3, motif3) '.
+            'values("'.$cod_etu_eval.'","'.$condition2.'", "'.$motif2.'","'.$condition3.'", "'.$motif3.'") ' ;
+            // requete insert
+            $data2 = $app ['db']->query($sql) ;
+        }
+        else
+        {
+          $sql = 'update evaluation set '.
+          'condition2="'.$condition2.'", motif2="'.$motif2.'", condition3="'.$condition3.'", motif3="'.$motif3.'" '.
+          'where cod_etu = "'.$cod_etu_eval.'" ' ;
+          // requete insert
+          $data2 = $app ['db']->query($sql) ;
+        }
+
 
         // redirect somewhere
         return $app->redirect('/');
@@ -56,6 +129,7 @@ $app->match('/form', function (Request $request) use ($app) {
 
     // display the form
     return $app['twig']->render('form.twig', array('form' => $form->createView()));
+
 });
 
 $app->error(function (\Exception $e, $code) use ($app) {

@@ -2,15 +2,23 @@
 
 {% block content %}
 
-<form action="#" method="post">
-    {{ form_widget(form.lib_nom_pat_ind) }} {{ form_widget(form.lib_pr1_ind) }}
-    <div Condition de travail id="devis_typeSite">
-       <input type="radio" id="condition21" name="condition[travail]" required="required" value="1" />
-       <label for="condition21" class=" required">Condition remplie</label>
-       <input type="radio" id="condition22" name="condition[travail]" required="required" value="2" />
-       <label for="condition22" class=" required">Condition non remplie</label>
-    </div>
-    <input type="submit" value="Envoyez le formulaire"/>
-</form>
+
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_widget(form.lib_nom_pat_ind)  }}
+    {{ form_row(form.lib_pr1_ind) }}
+
+    {{ form_row(form.condition2) }}
+    {{ form_row(form.motif2) }}
+
+    {{ form_row(form.condition3) }}
+    {{ form_row(form.motif3) }}
+
+
+
+
+{{ form_end(form) }}
+
 
 {% endblock %}

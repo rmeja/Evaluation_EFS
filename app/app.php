@@ -11,6 +11,7 @@ use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use App\Form\Type\EvaluationType;
 
+
 $app = new Application();
 $app->register(new TwigServiceProvider());
 $app->register(new SecurityServiceProvider());
@@ -36,8 +37,10 @@ $app['security.firewalls'] = array(
     'users' => array(
       // Password = foo
       'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
-    ),
-  ),
+      // Password = boo
+      'john' => array('ROLE_ENSEIGNANT', 'kRWGwd3yT6AuRW7oVKRy3JEf+xwRVZjih6U2SkC1O8APt7wxaoG3jdn72frQsq6/VhtPdNOEtaSmYgUyZCsauA==')
+    )
+  )
 );
 
 $app['twig'] = $app->extend('twig', function ($twig, $app) {
