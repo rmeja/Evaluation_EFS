@@ -40,6 +40,7 @@ $app->get('/', function () use ($app) {
   $query_etudiants
       ->select('i.cod_etu', 'lib_pr1_ind', 'lib_nom_pat_ind', 'mail_etu')
       ->from('individu', 'i')
+      ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu=e.cod_etu')
       ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
   ;
 
@@ -91,7 +92,7 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
     ->select('*')
     ->from('individu', 'i')
     ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu=e.cod_etu')
-    ->leftJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu=i.cod_etu')
+    ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu=i.cod_etu')
     ->where('i.cod_etu = "'.$id_etu.'"')
   ;
 
@@ -103,16 +104,20 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   $form->handleRequest($request);
 
   if ($form->isValid()) {
-    $data = $form->getData();
+    $formData = $form->getData();
 
-    // do something with the data
+
 
     // redirect somewhere
     return $app->redirect('/');
   }
 
   // display the form
-  return $app['twig']->render('form.twig', array('form' => $form->createView()));
+  return $app['twig']->render('form.twig', array(
+    'form' => $form->createView(),
+    'data' => $data
+    )
+  );
 })->bind('form');;
 
 $app->error(function (\Exception $e, $code) use ($app) {
