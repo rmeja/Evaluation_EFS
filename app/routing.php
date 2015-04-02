@@ -38,9 +38,9 @@ $app->get('/', function () use ($app) {
   $query_etudiants = $app['db']->createQueryBuilder();
 
   $query_etudiants
-      ->select('i.cod_etu', 'lib_pr1_ind', 'lib_nom_pat_ind', 'mail_etu')
+      ->select('i.*')
       ->from('individu', 'i')
-      ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu=e.cod_etu')
+      ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu = e.cod_etu')
       ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
   ;
 
@@ -68,6 +68,15 @@ $app->get('/', function () use ($app) {
 
   $resultats_etudiants = $query_etudiants->execute();
   $data['etudiants'] = $resultats_etudiants->fetchAll();
+
+  $data['etape_active'] = '';
+
+  foreach ($data['etapes'] as $item) {
+    if (in_array($etape, $item)) {
+      $data['etape_active'] = $item['lib_etp'];
+    }
+  }
+
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
@@ -173,6 +182,7 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
         ->setParameter(5, $formData['motif3'])
         ->setParameter(6, $formData['directeur_choix'])
         ->setParameter(7, time())
+        ->where('cod_etu = "'.$formData['cod_etu'].'"')
       ;
       $query_update_evaluation->execute();
     }

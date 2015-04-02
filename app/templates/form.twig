@@ -37,14 +37,18 @@
     {{ form_row(form.condition3, {'label': 'Condition 3 : assiduité participative'}) }}
     {{ form_row(form.motif3, {'required': false}) }}
 
-    {{ form_row(form.directeur_choix, {'label': 'Avis du directeur de l\'ESPÉ sur le parcours de formation du stagiaire'}) }}
-
+    {% if is_granted('ROLE_ADMIN') %}
+      {{ form_row(form.directeur_choix, {'label': 'Avis du directeur de l\'ESPÉ sur le parcours de formation du stagiaire'}) }}
+    {% endif %}
     {{ form_row(form.valider) }}
 
     {{ form_widget(form._token) }}
 
     {{ form_end(form, {'render_rest': false}) }}
 
+    {% if data.datetime_modif %}
+      <p class="text-info">Dernière modification : {{ data.datetime_modif|date("d/m/Y") }} à {{ data.datetime_modif|date("G:i:s") }}</p>
+    {% endif %}
   </div>
 
 {% endblock %}
