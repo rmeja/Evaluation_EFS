@@ -105,6 +105,9 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   $resultat_etudiant = $query_etudiant->execute();
   $data = $resultat_etudiant->fetch();
 
+  $date = new DateTime($data['dat_nai_ind']);
+
+  $data['dat_nai_ind'] = date_format($date, 'd/m/Y');
   $form = $app['form.factory']->createBuilder('evaluation', $data)->getForm();
 
   $form->handleRequest($request);
@@ -114,6 +117,10 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
 
     $isNew = is_null($data['datetime_modif']);
 
+    if ($formData['condition1']=='remplie' && $formData['condition2']=='remplie' && $formData['condition3']=='remplie') {
+      $formData['directeur_choix'] = 'positif';
+    }
+
     if ($isNew) {
       $query_insert_evaluation = $app['db']->createQueryBuilder();
       $query_insert_evaluation
@@ -122,16 +129,28 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
             array(
               'cod_etu' => '?',
               'cod_etp' => '?',
+              'cod_vrs_vet' => '?',
               'login_uti' => '?',
+              'condition1' => '?',
               'condition2' => '?',
+              'motif2' => '?',
+              'condition3' => '?',
+              'motif3' => '?',
+              'directeur_choix' => '?',
               'datetime_modif' => '?'
             )
           )
           ->setParameter(0, $data['cod_etu'])
           ->setParameter(1, $data['cod_etp'])
-          ->setParameter(2, $user->getUsername())
-          ->setParameter(3, $formData['condition2'])
-          ->setParameter(4, time())
+          ->setParameter(2, $data['cod_vrs_vet'])
+          ->setParameter(3, $user->getUsername())
+          ->setParameter(4, $formData['condition1'])
+          ->setParameter(5, $formData['condition2'])
+          ->setParameter(6, $formData['motif2'])
+          ->setParameter(7, $formData['condition3'])
+          ->setParameter(8, $formData['motif3'])
+          ->setParameter(9, $formData['directeur_choix'])
+          ->setParameter(10, time())
       ;
       $query_insert_evaluation->execute();
     } else {
@@ -139,9 +158,21 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
       $query_update_evaluation
         ->update('evaluation')
         ->set('login_uti', '?')
+        ->set('condition1', '?')
         ->set('condition2', '?')
+        ->set('motif2', '?')
+        ->set('condition3', '?')
+        ->set('motif3', '?')
+        ->set('directeur_choix', '?')
+        ->set('datetime_modif', '?')
         ->setParameter(0, $user->getUsername())
-        ->setParameter(1, $formData['condition2'])
+        ->setParameter(1, $formData['condition1'])
+        ->setParameter(2, $formData['condition2'])
+        ->setParameter(3, $formData['motif2'])
+        ->setParameter(4, $formData['condition3'])
+        ->setParameter(5, $formData['motif3'])
+        ->setParameter(6, $formData['directeur_choix'])
+        ->setParameter(7, time())
       ;
       $query_update_evaluation->execute();
     }

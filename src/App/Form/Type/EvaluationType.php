@@ -16,8 +16,8 @@ class EvaluationType extends AbstractType {
       ->add('lib_etp', null, array('read_only' => true))
       ->add('condition1', 'choice', array(
         'choices' => array(
-          'Condition remplie',
-          'En attente',
+          'remplie' => 'Condition remplie',
+          'en_attente' => 'En attente',
           'Condition non remplie'
           ),
         'expanded' => true
@@ -38,8 +38,8 @@ class EvaluationType extends AbstractType {
       )
       ->add('condition3', 'choice', array(
         'choices' => array(
-          'Condition remplie',
-          'Condition non remplie'
+          'remplie' => 'Condition remplie',
+          'non_remplie' => 'Condition non remplie'
           ),
         'expanded' => true,
         )
@@ -51,8 +51,8 @@ class EvaluationType extends AbstractType {
       )
       ->add('directeur_choix', 'choice', array(
         'choices' => array(
-          'Condition remplie',
-          'Condition non remplie'
+          'positif' => 'Avis positif',
+          'negatif' => 'Avis négatif'
           ),
         'expanded' => true
         )
