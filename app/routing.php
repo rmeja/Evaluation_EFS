@@ -86,6 +86,12 @@ $app->get('/login', function (Request $request) use ($app) {
 $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   // some default data for when the form is displayed the first time
 
+  $token = $app['security']->getToken();
+
+  if (null !== $token) {
+    $user = $token->getUser();
+  }
+
   $query_etudiant = $app['db']->createQueryBuilder();
 
   $query_etudiant
@@ -106,7 +112,39 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   if ($form->isValid()) {
     $formData = $form->getData();
 
+    $isNew = is_null($data['datetime_modif']);
 
+    if ($isNew) {
+      $query_insert_evaluation = $app['db']->createQueryBuilder();
+      $query_insert_evaluation
+        ->insert('evaluation')
+          ->values(
+            array(
+              'cod_etu' => '?',
+              'cod_etp' => '?',
+              'login_uti' => '?',
+              'condition2' => '?',
+              'datetime_modif' => '?'
+            )
+          )
+          ->setParameter(0, $data['cod_etu'])
+          ->setParameter(1, $data['cod_etp'])
+          ->setParameter(2, $user->getUsername())
+          ->setParameter(3, $formData['condition2'])
+          ->setParameter(4, time())
+      ;
+      $query_insert_evaluation->execute();
+    } else {
+      $query_update_evaluation = $app['db']->createQueryBuilder();
+      $query_update_evaluation
+        ->update('evaluation')
+        ->set('login_uti', '?')
+        ->set('condition2', '?')
+        ->setParameter(0, $user->getUsername())
+        ->setParameter(1, $formData['condition2'])
+      ;
+      $query_update_evaluation->execute();
+    }
 
     // redirect somewhere
     return $app->redirect('/');

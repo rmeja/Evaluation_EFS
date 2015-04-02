@@ -25,8 +25,8 @@ class EvaluationType extends AbstractType {
       )
       ->add('condition2', 'choice', array(
         'choices' => array(
-          'Condition remplie',
-          'Condition non remplie'
+          'remplie' => 'Condition remplie',
+          'non_remplie' => 'Condition non remplie'
           ),
         'expanded' => true
         )
