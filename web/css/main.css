@@ -4,6 +4,12 @@ body {
   background-color: white;
 }
 
+.header {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+}
+
 .dashboard {
   background-color: #f8f8f8;
   border: 1px solid #e7e7e7;

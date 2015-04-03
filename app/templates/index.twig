@@ -1,6 +1,12 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+  <div class="header">
+    <div class="row">
+      <h3 class="col-xs-9">Évaluation des Étudiants Fonctionnaires Stagiaires</h3>
+      <img class="col-xs-3 logo-espe" src="{{ asset('img/logo_ul_espe_small.png') }}" alt="Logo ESPÉ"/>
+    </div>
+  </div>
   <nav class="navbar navbar-default">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -10,11 +16,10 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href="{{ url('homepage') }}" class="navbar-brand">Evaluation EFS</a>
+        <a href="{{ url('homepage') }}" class="navbar-brand">Accueil</a>
       </div>
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="{{ url('homepage') }}">Accueil</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ etape_active ?: 'Etapes' }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
