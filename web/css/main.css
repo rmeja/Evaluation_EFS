@@ -4,3 +4,22 @@ body {
   background-color: white;
 }
 
+.dashboard {
+  background-color: #f8f8f8;
+  border: 1px solid #e7e7e7;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+  background-color: #EEEEEE;
+}
+
+.form-evalefs {
+  background-color: #f8f8f8;
+  border: 1px solid #e7e7e7;
+}
+
+.info-modif {
+  text-align: right;
+  margin: 10px;
+  color: #999999;
+}

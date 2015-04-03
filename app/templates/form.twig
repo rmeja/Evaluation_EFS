@@ -59,7 +59,7 @@
   {{ form_end(form, {'render_rest': false}) }}
 
   {% if data.datetime_modif %}
-    <p class="text-info">Dernière modification : {{ data.datetime_modif|date("d/m/Y") }} à {{ data.datetime_modif|date("G:i:s") }}</p>
+    <p class="info-modif">Dernière modification : {{ data.datetime_modif|date("d/m/Y") }} à {{ data.datetime_modif|date("G:i:s") }}</p>
   {% endif %}
 
 </div>
