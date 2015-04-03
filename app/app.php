@@ -57,8 +57,6 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
   return $twig;
 });
 
-$app['twig.form.templates'] = array('bootstrap_3_layout.html.twig');
-
 $app['form.types'] = $app->share($app->extend('form.types', function ($types) use ($app) {
   $types[] = new EvaluationType();
 
