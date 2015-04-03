@@ -57,11 +57,7 @@ class EvaluationType extends AbstractType {
         'expanded' => true
         )
       )
-      ->add('valider', 'submit', array(
-        'attr' => array(
-          'class' => 'btn-primary'
-        )
-      ))
+      ->add('valider', 'submit')
     ;
   }
 

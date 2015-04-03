@@ -4,7 +4,6 @@
 
   {{ form_start(form, {'method': 'POST'}) }}
   {{ form_errors(form) }}
-
   {% if data.lib_nom_usu_ind is not empty %}
     <div class="col-md-6">
       {{ form_row(form.lib_nom_pat_ind, {'label': 'Nom de famille'}) }}
@@ -26,7 +25,7 @@
     </div>
   {% endif %}
 
-  <div class="col-md-12">
+  <div class="footer-widget col-md-12">
     {{ form_row(form.lib_etp, {'label': 'Site de Formation ou Parcours'}) }}
 
     {{ form_row(form.condition1, {'label': 'Condition 1 : Master obtenu ou dispense de Master'}) }}
@@ -40,15 +39,27 @@
     {% if is_granted('ROLE_ADMIN') %}
       {{ form_row(form.directeur_choix, {'label': 'Avis du directeur de l\'ESPÉ sur le parcours de formation du stagiaire'}) }}
     {% endif %}
-    {{ form_row(form.valider) }}
-
-    {{ form_widget(form._token) }}
-
-    {{ form_end(form, {'render_rest': false}) }}
-
-    {% if data.datetime_modif %}
-      <p class="text-info">Dernière modification : {{ data.datetime_modif|date("d/m/Y") }} à {{ data.datetime_modif|date("G:i:s") }}</p>
-    {% endif %}
   </div>
+  <div class="footer-button row text-center">
+    <div class="col-xs-6">
+      {{ form_row(form.valider, {
+        'attr': {
+          'class': 'btn-success btn-lg'
+          }
+        })
+      }}
+    </div>
+    <div class="col-xs-6">
+      <a href="{{ url('homepage', {'etape': data.cod_etp}) }}" class="btn btn-lg btn-danger" role="button">Annuler</a>
+    </div>
+  </div>
+  {{ form_widget(form._token) }}
+
+  {{ form_end(form, {'render_rest': false}) }}
+
+  {% if data.datetime_modif %}
+    <p class="text-info">Dernière modification : {{ data.datetime_modif|date("d/m/Y") }} à {{ data.datetime_modif|date("G:i:s") }}</p>
+  {% endif %}
+
 
 {% endblock %}
