@@ -38,7 +38,7 @@ $app->get('/', function () use ($app) {
   $query_etudiants = $app['db']->createQueryBuilder();
 
   $query_etudiants
-      ->select('i.*')
+      ->select('*')
       ->from('individu', 'i')
       ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu = e.cod_etu')
       ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
@@ -76,7 +76,6 @@ $app->get('/', function () use ($app) {
       $data['etape_active'] = $item['lib_etp'];
     }
   }
-
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
@@ -190,6 +189,8 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
     // redirect somewhere
     return $app->redirect('/');
   }
+
+  $data['user'] = $user->getUsername();
 
   // display the form
   return $app['twig']->render('form.twig', array(

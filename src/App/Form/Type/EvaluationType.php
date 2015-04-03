@@ -17,8 +17,8 @@ class EvaluationType extends AbstractType {
       ->add('condition1', 'choice', array(
         'choices' => array(
           'remplie' => 'Condition remplie',
-          'en_attente' => 'En attente',
-          'Condition non remplie'
+          'en attente' => 'En attente',
+          'non remplie' => 'Condition non remplie'
           ),
         'expanded' => true
         )
@@ -26,7 +26,7 @@ class EvaluationType extends AbstractType {
       ->add('condition2', 'choice', array(
         'choices' => array(
           'remplie' => 'Condition remplie',
-          'non_remplie' => 'Condition non remplie'
+          'non remplie' => 'Condition non remplie'
           ),
         'expanded' => true
         )
@@ -39,7 +39,7 @@ class EvaluationType extends AbstractType {
       ->add('condition3', 'choice', array(
         'choices' => array(
           'remplie' => 'Condition remplie',
-          'non_remplie' => 'Condition non remplie'
+          'non remplie' => 'Condition non remplie'
           ),
         'expanded' => true,
         )
