@@ -77,6 +77,16 @@ $app->get('/', function () use ($app) {
     }
   }
 
+  $nombre_etudiant_a_renseigner = 0;
+  foreach ($data['etudiants'] as $etudiant) {
+    if(empty($etudiant['datetime_modif'])) {
+      $nombre_etudiant_a_renseigner++;
+    }
+  }
+  $data['nombre_etudiant_total'] = count($data['etudiants']);
+  $data['nombre_etudiant_a_renseigner'] = $nombre_etudiant_a_renseigner;
+
+
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
 
