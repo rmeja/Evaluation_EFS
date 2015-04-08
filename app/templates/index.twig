@@ -21,7 +21,7 @@
       <div class="navbar-collapse collapse" id="navbar">
         <ul class="nav navbar-nav">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ etape_active ?: 'Etapes' }} <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ libelle_etape_active ?: 'Etapes' }} <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
             {% for etape in etapes %}
               <li><a href="{{ url('homepage', {etape: etape.cod_etp}) }}">{{ etape.lib_etp }}</a></li>

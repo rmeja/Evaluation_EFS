@@ -45,6 +45,8 @@ $app->get('/', function () use ($app) {
   ;
 
   $etape = $app['request']->get('etape');
+  $app['session']->set('etape_active', $etape);
+
   $access = FALSE;
 
   if (isset($etape)) {
@@ -69,11 +71,11 @@ $app->get('/', function () use ($app) {
   $resultats_etudiants = $query_etudiants->execute();
   $data['etudiants'] = $resultats_etudiants->fetchAll();
 
-  $data['etape_active'] = '';
+  $data['libelle_etape_active'] = '';
 
   foreach ($data['etapes'] as $item) {
     if (in_array($etape, $item)) {
-      $data['etape_active'] = $item['lib_etp'];
+      $data['libelle_etape_active'] = $item['lib_etp'];
     }
   }
 
@@ -105,6 +107,7 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   // some default data for when the form is displayed the first time
 
   $token = $app['security']->getToken();
+  $etape_active = $app['session']->get('etape_active', false);
 
   if (null !== $token) {
     $user = $token->getUser();
@@ -197,9 +200,14 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
     }
 
     // redirect somewhere
-    return $app->redirect('/?etape='.$data['cod_etp']);
-  }
+    if ($etape_active) {
+      return $app->redirect('/?etape='.$data['cod_etp']);
+    } else {
+      return $app->redirect('/');
+    }
 
+  }
+  $data['etape_active'] = $etape_active;
   $data['user'] = $user->getUsername();
 
   // display the form

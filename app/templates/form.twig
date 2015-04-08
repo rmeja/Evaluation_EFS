@@ -51,7 +51,7 @@
       }}
     </div>
     <div class="col-xs-6">
-      <a href="{{ url('homepage', {'etape': data.cod_etp}) }}" class="btn btn-lg btn-danger" role="button">Annuler</a>
+      <a href="{{ url('homepage', {'etape': data.etape_active}) }}" class="btn btn-lg btn-danger" role="button">Annuler</a>
     </div>
   </div>
   {{ form_widget(form._token) }}
