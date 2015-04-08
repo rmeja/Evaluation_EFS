@@ -197,7 +197,9 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
     }
 
     // redirect somewhere
-    return $app->redirect('/');
+    return $app->redirect('/?etape='.$data['cod_etp
+
+    ']);
   }
 
   $data['user'] = $user->getUsername();
