@@ -42,6 +42,7 @@ $app->get('/', function () use ($app) {
       ->from('individu', 'i')
       ->leftJoin('i', 'evaluation', 'e', 'i.cod_etu = e.cod_etu')
       ->innerJoin('i', 'individu_etape', 'i_e', 'i_e.cod_etu = i.cod_etu')
+      ->orderBy('i.lib_nom_pat_ind')
   ;
 
   $etape = $app['request']->get('etape');
