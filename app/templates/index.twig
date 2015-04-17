@@ -32,7 +32,8 @@
           <li class="navbar-text">À renseigner <span class="badge">{{ nombre_etudiant_a_renseigner }}</span></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+          <p class="navbar-text">{{ user }}</p>
+          <li><a href="{{ path('logout') }}">Se Déconnecter</a></li>
         </ul>
       </div>
       <!--/.nav-collapse -->

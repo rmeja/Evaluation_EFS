@@ -88,7 +88,7 @@ $app->get('/', function () use ($app) {
   }
   $data['nombre_etudiant_total'] = count($data['etudiants']);
   $data['nombre_etudiant_a_renseigner'] = $nombre_etudiant_a_renseigner;
-
+  $data['user'] = $user->getUsername();
 
   return $app['twig']->render('index.twig', $data);
 })->bind('homepage');
