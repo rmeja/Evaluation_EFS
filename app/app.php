@@ -10,7 +10,6 @@ use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\DoctrineServiceProvider;
 use App\Form\Type\EvaluationType;
-use App\User\UserProvider;
 
 
 $app = new Application();
@@ -25,26 +24,9 @@ $app->register(new DoctrineServiceProvider());
 
 // Toutes les urls sont sécurisés sauf la page '/login'
 $app['security.firewalls'] = array(
-  'login' => array(
-    'pattern' => '^/login$',
-  ),
-  'secured' => array(
+  'openbar' => array(
     'pattern' => '^.*$',
-    'form' => array(
-      'login_path' => '/login',
-      'check_path' => '/login_check'
-    ),
-    'logout' => array('logout_path' => '/logout'),
-    'users' => $app->share(function () use ($app) {
-      return new UserProvider($app['db']);
-    })
-
-//    'users' => array(
-//      // Password = foo
-//      'admin' => array('ROLE_ADMIN', '5FZ2Z8QIkA7UTZ4BYkoC+GsReLf569mSKDsfods6LYQ8t+a8EW9oaircfMpmaLbPBh4FOBiiFyLfuZmTSUwzZg=='),
-//      // Password = boo
-//      'john' => array('ROLE_ENSEIGNANT', 'kRWGwd3yT6AuRW7oVKRy3JEf+xwRVZjih6U2SkC1O8APt7wxaoG3jdn72frQsq6/VhtPdNOEtaSmYgUyZCsauA==')
-//    )
+    'anonymous' => true
   )
 );
 

@@ -2,8 +2,27 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use App\User\UserProvider;
 
 //Request::setTrustedProxies(array('127.0.0.1'));
+
+$app->before(function () use ($app) {
+  phpCAS::client(CAS_VERSION_2_0, 'auth.univ-lorraine.fr', 443, '');
+
+  phpCAS::setNoCasServerValidation();
+  if (!phpCAS::isAuthenticated()) {
+    phpCAS::forceAuthentication();
+  }
+  $username = phpCAS::getUser();
+  $userProvider = new UserProvider($app['db']);
+
+  $user = $userProvider->loadUserByUsername($username);
+
+  $token = new UsernamePasswordToken($user,'','site',$user->getRoles());
+  $app['security']->setToken($token);
+});
+
 
 $app->get('/', function () use ($app) {
 
@@ -100,9 +119,9 @@ $app->get('/login', function (Request $request) use ($app) {
   ));
 })->bind('login');
 
-//$app->match('/password', function (Request $request) use ($app) {
-//  return (new \Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder())->encodePassword('boo', '');
-//});
+$app->get('/logout', function () {
+  phpCAS::logout();
+})->bind('logout');
 
 $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
   // some default data for when the form is displayed the first time
@@ -220,17 +239,17 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
 })->bind('form');;
 
 $app->error(function (\Exception $e, $code) use ($app) {
-    if ($app['debug']) {
-        return;
-    }
+  if ($app['debug']) {
+      return;
+  }
 
-    // 404.html, or 40x.html, or 4xx.html, or error.html
-    $templates = array(
-        'errors/'.$code.'.twig',
-        'errors/'.substr($code, 0, 2).'x.twig',
-        'errors/'.substr($code, 0, 1).'xx.twig',
-        'errors/default.twig',
-    );
+  // 404.html, or 40x.html, or 4xx.html, or error.html
+  $templates = array(
+    'errors/'.$code.'.twig',
+    'errors/'.substr($code, 0, 2).'x.twig',
+    'errors/'.substr($code, 0, 1).'xx.twig',
+    'errors/default.twig',
+  );
 
-    return new Response($app['twig']->resolveTemplate($templates)->render(array('code' => $code)), $code);
+  return new Response($app['twig']->resolveTemplate($templates)->render(array('code' => $code)), $code);
 });
