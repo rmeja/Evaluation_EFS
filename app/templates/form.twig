@@ -27,15 +27,40 @@
   {% endif %}
 
   <div class="footer-widget col-md-12">
-    {{ form_row(form.lib_etp, {'label': 'Site de Formation ou Parcours'}) }}
+    {{ form_row(form.lib_web_vet, {'label': 'Site de Formation ou Parcours'}) }}
 
-    {{ form_row(form.condition1, {'label': 'Condition 1 : Master obtenu ou dispense de Master'}) }}
+    {% if is_granted('ROLE_ENSEIGNANT') %}
 
-    {{ form_row(form.condition2, {'label': 'Condition 2 : aboutissement du travail de réflexion sur la pratique'}) }}
-    {{ form_row(form.motif2, {'required': false}) }}
+      {{ form_row(form.condition2, {'label': 'Condition 2 : aboutissement du travail de réflexion sur la pratique'}) }}
+      {{ form_row(form.motif2, {'required': false}) }}
 
-    {{ form_row(form.condition3, {'label': 'Condition 3 : assiduité participative'}) }}
-    {{ form_row(form.motif3, {'required': false}) }}
+      {{ form_row(form.condition3, {'label': 'Condition 3 : assiduité participative'}) }}
+      {{ form_row(form.motif3, {'required': false}) }}
+    {% else %}
+      {{ form_row(form.condition1, {
+        'label': 'Condition 1 : Master obtenu ou dispense de Master de bob',
+        'expanded': false,
+        'disabled': true
+        })
+      }}
+
+      {{ form_row(form.condition2, {
+        'label': 'Condition 2 : aboutissement du travail de réflexion sur la pratique',
+        'expanded': false,
+        'disabled': true
+        })
+      }}
+      {{ form_row(form.motif2, {'required': false, 'disabled': true}) }}
+
+      {{ form_row(form.condition3, {
+        'label': 'Condition 3 : assiduité participative',
+        'expanded': false,
+        'disabled': true
+        })
+      }}
+      {{ form_row(form.motif3, {'required': false, 'disabled': true}) }}
+
+    {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
       {{ form_row(form.directeur_choix, {'label': 'Avis du directeur de l\'ESPÉ sur le parcours de formation du stagiaire'}) }}

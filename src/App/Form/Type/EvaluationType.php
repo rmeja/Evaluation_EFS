@@ -9,11 +9,11 @@ class EvaluationType extends AbstractType {
 
   public function buildForm(FormBuilderInterface $builder, array $options) {
     $builder
-      ->add('lib_nom_pat_ind', null, array('read_only' => true))
-      ->add('lib_nom_usu_ind', null, array('read_only' => true))
-      ->add('lib_pr1_ind', null, array('read_only' => true))
-      ->add('dat_nai_ind', null, array('read_only' => true))
-      ->add('lib_etp', null, array('read_only' => true))
+      ->add('lib_nom_pat_ind', null, array('disabled' => true))
+      ->add('lib_nom_usu_ind', null, array('disabled' => true))
+      ->add('lib_pr1_ind', null, array('disabled' => true))
+      ->add('dat_nai_ind', null, array('disabled' => true))
+      ->add('lib_web_vet', null, array('disabled' => true))
       ->add('condition1', 'choice', array(
         'choices' => array(
           'remplie' => 'Condition remplie',

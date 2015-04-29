@@ -47,7 +47,6 @@
         <th>#</th>
         <th>Prénom</th>
         <th>Nom</th>
-        <th>Condition 1</th>
         <th>Condition 2</th>
         <th>Condition 3</th>
         <th>Éditer</th>
@@ -55,13 +54,12 @@
       </thead>
       <tbody>
       {% for etudiant in etudiants %}
-        <tr {% if etudiant.condition1 == 'remplie' and etudiant.condition2 == 'remplie' and etudiant.condition3 == 'remplie' %} class="success"
-            {% elseif etudiant.condition1 == 'non remplie' or etudiant.condition2 == 'non remplie' or etudiant.condition3 == 'non remplie' %} class="danger"
+        <tr {% if etudiant.condition2 == 'remplie' and etudiant.condition3 == 'remplie' %} class="success"
+            {% elseif etudiant.condition2 == 'non remplie' or etudiant.condition3 == 'non remplie' %} class="danger"
             {% endif %}>
           <th scope="row">{{ loop.index }}</th>
           <td>{{ etudiant.lib_pr1_ind }}</td>
           <td>{{ etudiant.lib_nom_pat_ind }}{% if etudiant.lib_nom_usu_ind is not empty %} ({{ etudiant.lib_nom_usu_ind }}) {% endif %}</td>
-          <td>{{ etudiant.condition1|capitalize }}</td>
           <td>{{ etudiant.condition2|capitalize }}</td>
           <td>{{ etudiant.condition3|capitalize }}</td>
           <td>
