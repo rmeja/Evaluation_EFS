@@ -221,9 +221,9 @@ $app->match('/form/{id_etu}', function (Request $request, $id_etu) use ($app) {
 
     // redirect somewhere
     if ($etape_active) {
-      return $app->redirect('/?etape='.$data['cod_etp']);
+      return $app->redirect($app['url_generator']->generate('homepage', array('etapes' => $data['cod_etp'])));
     } else {
-      return $app->redirect('/');
+      return $app->redirect($app['url_generator']->generate('homepage'));
     }
 
   }
