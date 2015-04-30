@@ -251,5 +251,5 @@ $app->error(function (\Exception $e, $code) use ($app) {
     'errors/default.twig',
   );
 
-  return new Response($app['twig']->resolveTemplate($templates)->render(array('code' => $code)), $code);
+  return new Response($app['twig']->resolveTemplate($templates)->render(array('code' => $code, 'message' => $e->getMessage())), $code);
 });
